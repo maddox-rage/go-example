@@ -6,16 +6,19 @@ import (
 	"url-shortener/internal/config"
 	"url-shortener/internal/lib/logger/slg"
 	"url-shortener/internal/storage/sqlite"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
 	envLocal = "local"
-	envDev = "dev"
+	envDev   = "dev"
 )
 
 func main() {
 	cfg := config.MustLoad()
-	
+
 	log := setUpLogger(cfg.Env)
 
 	log.Info("starting", slog.String("env", cfg.Env))
@@ -28,11 +31,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	router := chi.NewRouter()
+
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
 	_ = storage
 
 }
 
-func setUpLogger(env string) *slog.Logger{
+func setUpLogger(env string) *slog.Logger {
 	var log *slog.Logger
 
 	switch env {
