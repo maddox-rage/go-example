@@ -10,15 +10,17 @@ import (
 )
 
 type Config struct {
-	Env         string `yaml:"env" env-default:"local" json:"env,omitempty"`
-	StoragePath string `yaml:"storage_path" env-required:"true" json:"storage_path,omitempty"`
+	Env         string `yaml:"env"          json:"env,omitempty" env-default:"local"`
+	StoragePath string `yaml:"storage_path" json:"storage_path,omitempty" env-required:"true"`
 	HttpServer  `yaml:"http_server" json:"http_server,omitempty"`
 }
 
 type HttpServer struct {
-	Address     string        `yaml:"address" env-default:"localhost:8080"  json:"address,omitempty"`
-	Timeout     time.Duration `yaml:"timeout" env-default:"5s" json:"timeout,omitempty"`
-	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s" json:"idle_timeout,omitempty"`
+	Address     string        `yaml:"address"      env-default:"localhost:8080" json:"address,omitempty"`
+	Timeout     time.Duration `yaml:"timeout"      env-default:"5s"             json:"timeout,omitempty"`
+	IdleTimeout time.Duration `yaml:"idle_timeout" env-default:"60s"            json:"idle_timeout,omitempty"`
+	User 				string 				`yaml:"user" env-required:"true"`
+	Password 		string 				`yaml:"password" env-required:"true" env:"HTTP_SERVER_PASSWORD"`
 }
 
 func MustLoad() *Config{
